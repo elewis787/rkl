@@ -24,7 +24,7 @@ var (
 	width               = physicalWidth / 3
 
 	titleStyle = lipgloss.NewStyle().Bold(true).
-			Border(lipgloss.ThickBorder()).
+			Border(lipgloss.DoubleBorder()).
 			BorderForeground(lipgloss.AdaptiveColor{Light: purple, Dark: purple}).
 			Padding(1, 1).
 			Align(lipgloss.Center)
