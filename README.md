@@ -1,14 +1,14 @@
-# rkl **"We Can Remember It for You Wholesale"**
-rkl ( rekall ) 
+# rkl 
+### Pronounced: Rekall (re-call)
+___
 
+**"We Can Remember It for You Wholesale"**
 
+Rkl helps you remember the little things so you can spend your time thinking.
 
-Rcl helps you recall the little things so you can spend your time thinking
-
-features include 
+Features include 
 - Command History Search
-- Command selection ( fill clip board )
+-   Command selection ( fill clip board )
 - Todos
 - Notes 
-- Alias creation  
 
