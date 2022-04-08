@@ -15,16 +15,16 @@ import (
 func Execute() error {
 	rootCmd := &cobra.Command{
 		Version: "v0.0.1",
-		Use:     "rcl",
-		Long:    "Recall (rcl) is a CLI that helps you remember things. Easily manage past commands, todos and notes all from your command line.",
+		Use:     "rkl",
+		Long:    "Rekall (rkl) is a CLI that helps you remember things. Easily manage past commands, todos and notes all from your command line.",
 		Short:   "root command",
-		Example: "rcl hst",
+		Example: "rkl hst",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := viper.BindPFlags(cmd.Flags()); err != nil {
 				return err
 			}
 			viper.AutomaticEnv()
-			viper.SetEnvPrefix("rcl")
+			viper.SetEnvPrefix("rkl")
 
 			homeDir, err := os.UserHomeDir()
 			if err != nil {
@@ -38,10 +38,11 @@ func Execute() error {
 		},
 	}
 
-	rootCmd.PersistentFlags().String("yolo", "", "defaults to active channel address in the cfg")
+	//rootCmd.PersistentFlags().String("yolo", "", "defaults to active channel address in the cfg")
 	//rootCmd.SetUsageFunc(styleUsageFunc)
 	rootCmd.SetHelpFunc(styleHelpFunc)
 	rootCmd.AddCommand(history.HistoryCmd())
+	rootCmd.AddCommand(initialize())
 	rootCmd.AddCommand(note.NoteCmd())
 
 	ctx, cancel := context.WithCancel(context.Background())

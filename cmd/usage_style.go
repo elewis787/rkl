@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
+	"unicode"
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
@@ -89,9 +91,10 @@ func buildUsage(c *cobra.Command) string {
 
 		for _, subcmd := range c.Commands() {
 			if subcmd.Name() == "help" || subcmd.IsAvailableCommand() {
-				cmd := textStyle.Render(subcmd.Name()) + lipgloss.NewStyle().
-					Foreground(lipgloss.AdaptiveColor{Light: darkGrey, Dark: white}).Bold(true).
-					PaddingLeft(subcmd.NamePadding()-len(subcmd.Name())+1).Render(subcmd.Short)
+				cmd := textStyle.Render(subcmd.Name()) +
+					lipgloss.NewStyle().
+						Foreground(lipgloss.AdaptiveColor{Light: darkGrey, Dark: white}).Bold(true).
+						PaddingLeft(subcmd.NamePadding()-len(subcmd.Name())+1).Render(subcmd.Short)
 				usageOutput = lipgloss.JoinVertical(lipgloss.Top, usageOutput, cmd)
 			}
 		}
@@ -101,13 +104,13 @@ func buildUsage(c *cobra.Command) string {
 
 	if c.HasAvailableLocalFlags() {
 		localFlags := sectionStyle.Render("Flags:")
-		flagUsage := textStyle.Render(c.LocalFlags().FlagUsages())
+		flagUsage := textStyle.Render(strings.TrimFunc(c.LocalFlags().FlagUsages(), unicode.IsSpace))
 		usageOutput = lipgloss.JoinVertical(lipgloss.Top, usageOutput, localFlags, flagUsage)
 	}
 
 	if c.HasAvailableInheritedFlags() {
 		globalFlags := sectionStyle.Render("Global Flags:")
-		flagUsage := textStyle.Render(c.InheritedFlags().FlagUsages())
+		flagUsage := textStyle.Render(strings.TrimFunc(c.InheritedFlags().FlagUsages(), unicode.IsSpace))
 		usageOutput = lipgloss.JoinVertical(lipgloss.Top, usageOutput, globalFlags, flagUsage)
 	}
 
