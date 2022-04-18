@@ -1,13 +1,13 @@
 package main
 
 import (
-	"os"
+	"log"
 
-	"github.com/elewis787/rcl/cmd"
+	"github.com/elewis787/rkl/cmd"
 )
 
 func main() {
 	if err := cmd.Execute(); err != nil {
-		os.Exit(0)
+		log.Fatal(err)
 	}
 }

@@ -5,19 +5,20 @@ import (
 	"errors"
 	"os"
 
-	"github.com/elewis787/rcl/cmd/history"
-	"github.com/elewis787/rcl/cmd/note"
+	"github.com/elewis787/boa"
+	"github.com/elewis787/rkl/cmd/history"
+	"github.com/elewis787/rkl/cmd/note"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"golang.org/x/sync/errgroup"
 )
 
+// Execute is the command line applications entry function
 func Execute() error {
 	rootCmd := &cobra.Command{
 		Version: "v0.0.1",
 		Use:     "rkl",
 		Long:    "Rekall (rkl) is a CLI that helps you remember things. Easily manage past commands, todos and notes all from your command line.",
-		Short:   "root command",
 		Example: "rkl hst",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := viper.BindPFlags(cmd.Flags()); err != nil {
@@ -37,14 +38,14 @@ func Execute() error {
 			return nil
 		},
 	}
+	rootCmd.SetUsageFunc(boa.UsageFunc)
+	rootCmd.SetHelpFunc(boa.HelpFunc)
 
-	//rootCmd.PersistentFlags().String("yolo", "", "defaults to active channel address in the cfg")
-	//rootCmd.SetUsageFunc(styleUsageFunc)
-	rootCmd.SetHelpFunc(styleHelpFunc)
+	// Add sub commands
 	rootCmd.AddCommand(history.HistoryCmd())
-	rootCmd.AddCommand(initialize())
 	rootCmd.AddCommand(note.NoteCmd())
 
+	// Applicaiton execution
 	ctx, cancel := context.WithCancel(context.Background())
 	errGrp, errctx := errgroup.WithContext(ctx)
 	errGrp.Go(func() error {
