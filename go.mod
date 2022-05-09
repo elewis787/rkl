@@ -2,13 +2,11 @@ module github.com/elewis787/rkl
 
 go 1.17
 
-replace github.com/elewis787/boa => ../boa
-
 require (
 	github.com/charmbracelet/bubbles v0.10.3
 	github.com/charmbracelet/bubbletea v0.20.0
 	github.com/charmbracelet/lipgloss v0.5.0
-	github.com/elewis787/boa v0.0.0-20220408160854-ec28a69f5d58
+	github.com/elewis787/boa v0.1.0
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.10.1
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c

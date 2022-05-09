@@ -19,32 +19,42 @@ func Execute() error {
 		Version: "v0.0.1",
 		Use:     "rkl",
 		Long:    "Rekall (rkl) is a CLI that helps you remember things. Easily manage past commands, todos and notes all from your command line.",
-		Example: "rkl hst",
+		Example: "rkl",
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			homeDir, err := os.UserHomeDir()
+			if err != nil {
+				return err
+			}
+			cfg := homeDir + cfgDir + cfgFile
+			if _, err := os.Stat(cfg); errors.Is(err, os.ErrNotExist) {
+				return errors.New(err.Error() + ": please run init to configure rkl\n")
+			}
+			return nil
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := viper.BindPFlags(cmd.Flags()); err != nil {
 				return err
 			}
 			viper.AutomaticEnv()
 			viper.SetEnvPrefix("rkl")
-
-			homeDir, err := os.UserHomeDir()
-			if err != nil {
-				return err
-			}
-			cfgPath := homeDir + rclDir + cfgFile
-			if _, err := os.Stat(cfgPath); errors.Is(err, os.ErrNotExist) {
-				return errors.New(err.Error() + ", please run init to configure rcl\n")
-			}
 			return nil
 		},
 	}
+
 	rootCmd.SetUsageFunc(boa.UsageFunc)
 	rootCmd.SetHelpFunc(boa.HelpFunc)
 
 	// Add sub commands
+	rootCmd.AddCommand(initialize())
 	rootCmd.AddCommand(history.HistoryCmd())
 	rootCmd.AddCommand(note.NoteCmd())
 
+	dir, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+
+	rootCmd.PersistentFlags().String(cfgPath, dir+cfgDir+cfgFile, "location of the mazzaroth config file")
 	// Applicaiton execution
 	ctx, cancel := context.WithCancel(context.Background())
 	errGrp, errctx := errgroup.WithContext(ctx)
@@ -55,5 +65,6 @@ func Execute() error {
 		}
 		return nil
 	})
+
 	return errGrp.Wait()
 }

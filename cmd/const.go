@@ -2,8 +2,9 @@ package cmd
 
 const (
 	version = `0.0.1`
-	rclDir  = `/.rcl/`
 	cfgFile = `cfg.yaml`
+	cfgDir  = `/.rkl/`
+	cfgPath = `cfg-path`
 
 	help = `Usage:
 	{{if .Runnable}}

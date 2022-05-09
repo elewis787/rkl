@@ -4,6 +4,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/elewis787/rkl/internal/tui"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 func initialize() *cobra.Command {
@@ -13,8 +14,19 @@ func initialize() *cobra.Command {
 		Long:    "init provision the rcl configuration file.",
 		Example: "rkl init",
 		Aliases: []string{"i", "init"},
+		// used to overwrite/skip the parent commands persistentPreRunE func
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			// Bind Cobra flags with viper
+			if err := viper.BindPFlags(cmd.Flags()); err != nil {
+				return err
+			}
+			// Environment variables are expected to be ALL CAPS
+			viper.AutomaticEnv()
+			viper.SetEnvPrefix("rkl")
+			return nil
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := tea.NewProgram(tui.NewInitPrompt()).Start(); err != nil {
+			if err := tea.NewProgram(tui.NewInitPrompt(viper.GetString(cfgPath))).Start(); err != nil {
 				return err
 			}
 			return nil
