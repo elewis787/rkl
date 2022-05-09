@@ -54,7 +54,7 @@ func Execute() error {
 		return err
 	}
 
-	rootCmd.PersistentFlags().String(cfgPath, dir+cfgDir+cfgFile, "location of the mazzaroth config file")
+	rootCmd.PersistentFlags().String(cfgPath, dir+cfgDir+cfgFile, "location of the rkl config file")
 	// Applicaiton execution
 	ctx, cancel := context.WithCancel(context.Background())
 	errGrp, errctx := errgroup.WithContext(ctx)
