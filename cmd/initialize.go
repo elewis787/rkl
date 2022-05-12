@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"os"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/elewis787/rkl/internal/tui"
 	"github.com/spf13/cobra"
@@ -9,7 +11,7 @@ import (
 
 func initialize() *cobra.Command {
 	init := &cobra.Command{
-		Use:     "initialze",
+		Use:     "initialize",
 		Short:   "init the rcl cfg.",
 		Long:    "init provision the rcl configuration file.",
 		Example: "rkl init",
@@ -26,7 +28,12 @@ func initialize() *cobra.Command {
 			return nil
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := tea.NewProgram(tui.NewInitPrompt(viper.GetString(cfgPath))).Start(); err != nil {
+			homeDir, err := os.UserHomeDir()
+			if err != nil {
+				return err
+			}
+
+			if err := tea.NewProgram(tui.NewInitPrompt(viper.GetString(cfgPath), homeDir)).Start(); err != nil {
 				return err
 			}
 			return nil

@@ -1,8 +1,6 @@
 package tui
 
 import (
-	"fmt"
-	"os"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -10,6 +8,8 @@ import (
 	"github.com/charmbracelet/lipgloss"
 	"github.com/elewis787/rkl/internal/cfg"
 )
+
+var _ tea.Model = &InitPromptModel{}
 
 const (
 	histKey = `History File Path`
@@ -21,13 +21,12 @@ type InitPromptModel struct {
 	cfgPath string
 }
 
-func NewInitPrompt(cfgPath string) *InitPromptModel {
-	homeDir, _ := os.UserHomeDir()
+func NewInitPrompt(cfgPath string, userHomeDir string) *InitPromptModel {
+
 	historyFilePrompt := textinput.New()
-	historyFilePrompt.Placeholder = homeDir + "/.history"
+	historyFilePrompt.Placeholder = userHomeDir + "/.history"
 	historyFilePrompt.PlaceholderStyle = lipgloss.NewStyle().Foreground(lipgloss.AdaptiveColor{Light: `#353C3B`, Dark: `#e5e5e5`})
 	historyFilePrompt.Focus()
-	fmt.Println(cfgPath)
 	return &InitPromptModel{
 		cfgPath: cfgPath,
 		inputs: map[string]textinput.Model{
@@ -69,7 +68,7 @@ func (i InitPromptModel) View() string {
 		if err != nil {
 			return err.Error()
 		}
-		return "Initalization complete! \n"
+		return "Initialization complete! \n"
 	}
 	output := strings.Builder{}
 	// Write input to screen
